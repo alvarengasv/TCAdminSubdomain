@@ -5,3 +5,4 @@ outputdeployment/
 *.user
 /.vs
 /packages
+/TCAdminSubdomain.sln

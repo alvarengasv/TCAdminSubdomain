@@ -19,12 +19,41 @@ namespace TCAdminSubdomain.Events.Commands
 
         public override CommandResponse ProcessCommand(object sender, IntegrationEventArgs args)
         {
-            if (args.Command != "AfterMove")
+            if (System.Environment.OSVersion.Platform == System.PlatformID.Unix && TCAdmin.SDK.Misc.Linux.IsRoot() && System.IO.File.Exists("/tmp/publicsuffixcache.dat"))
             {
-                return new CommandResponse(Globals.ModuleId, ReturnStatus.Ok);
+                TCAdmin.SDK.Misc.Linux.SetFileOwner("/tmp/publicsuffixcache.dat", "root");
+                TCAdmin.SDK.Misc.Linux.SetPermission("/tmp/publicsuffixcache.dat", 511);
             }
 
             var service = (Service) sender;
+
+            //Save current domain info before reinstall
+            if (args.Command == "BeforeReinstallScript" | args.Command == "BeforeGameSwitchScript")
+            {
+                if (service.Variables.HasValue("SD-FullSubDomain"))
+                {
+                    service.AppData["SD-FullSubDomain"] = service.Variables["SD-FullSubDomain"];
+                    service.AppData["SD-ZoneId"] = service.Variables["SD-ZoneId"];
+                    service.AppData["SD-DnsProvider"] = service.Variables["SD-DnsProvider"];
+                }
+                return new CommandResponse(Globals.ModuleId, ReturnStatus.Ok);
+            }
+
+            //Recover current domain info after reintall
+            if (args.Command == "AfterReinstallScript" | args.Command == "AfterGameSwitchScript")
+            {
+                if (service.AppData.HasValue("SD-FullSubDomain"))
+                {
+                    service.Variables["SD-FullSubDomain"] = service.AppData["SD-FullSubDomain"];
+                    service.Variables["SD-ZoneId"] = service.AppData["SD-ZoneId"];
+                    service.Variables["SD-DnsProvider"] = service.AppData["SD-DnsProvider"];
+                    service.AppData.RemoveValue("SD-FullSubDomain");
+                    service.AppData.RemoveValue("SD-ZoneId");
+                    service.AppData.RemoveValue("SD-DnsProvider");
+                }
+                return new CommandResponse(Globals.ModuleId, ReturnStatus.Ok);
+            }
+
             var subdomainSet = service.Variables.HasValueAndSet("SD-FullSubDomain");
             if (!subdomainSet)
             {
@@ -32,12 +61,12 @@ namespace TCAdminSubdomain.Events.Commands
                     ReturnStatus.SafeError);
             }
 
-            if (args.Command == ServiceEvent.AfterMove.ToString())
+            if (args.Command == "AfterMoveScript")
             {
                 return AfterMove(service);
             }
 
-            if (args.Command == ServiceEvent.AfterDelete.ToString())
+            if (args.Command == "AfterDeleteScript")
             {
                 return AfterDelete(service);
             }

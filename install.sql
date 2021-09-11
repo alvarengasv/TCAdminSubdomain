@@ -66,11 +66,40 @@ VALUES (3, 'ceb0b7e0-59f6-4290-991d-b766b30f1ff1', 'Dynv6Provider',
 INSERT INTO tc_module_commands (command_id, module_id, is_custom, description, sender_class, command_name,
                                 command_class, execute_order, enabled, can_disable, master_only)
 VALUES (1, 'ceb0b7e0-59f6-4290-991d-b766b30f1ff1', 1, 'Subdomain - After Move',
-        'TCAdmin.GameHosting.SDK.Objects.Service', 'AfterMove',
+        'TCAdmin.GameHosting.SDK.Objects.Service', 'AfterMoveScript',
         'TCAdminSubdomain.Events.Commands.ServiceCommands, TCAdminSubdomain', 100, 1, 0, null);
 
 INSERT INTO tc_module_commands (command_id, module_id, is_custom, description, sender_class, command_name,
                                 command_class, execute_order, enabled, can_disable, master_only)
 VALUES (2, 'ceb0b7e0-59f6-4290-991d-b766b30f1ff1', 1, 'Subdomain - After Delete',
-        'TCAdmin.GameHosting.SDK.Objects.Service', 'AfterDelete',
+        'TCAdmin.GameHosting.SDK.Objects.Service', 'AfterDeleteScript',
         'TCAdminSubdomain.Events.Commands.ServiceCommands, TCAdminSubdomain', 100, 1, 0, null);
+
+
+INSERT INTO tc_module_commands (command_id, module_id, is_custom, description, sender_class, command_name,
+                                command_class, execute_order, enabled, can_disable, master_only)
+VALUES (3, 'ceb0b7e0-59f6-4290-991d-b766b30f1ff1', 1, 'Subdomain - Before Reinstall',
+        'TCAdmin.GameHosting.SDK.Objects.Service', 'BeforeReinstallScript',
+        'TCAdminSubdomain.Events.Commands.ServiceCommands, TCAdminSubdomain', 100, 1, 0, null);
+
+INSERT INTO tc_module_commands (command_id, module_id, is_custom, description, sender_class, command_name,
+                                command_class, execute_order, enabled, can_disable, master_only)
+VALUES (4, 'ceb0b7e0-59f6-4290-991d-b766b30f1ff1', 1, 'Subdomain - After Reinstall',
+        'TCAdmin.GameHosting.SDK.Objects.Service', 'AfterReinstallScript',
+        'TCAdminSubdomain.Events.Commands.ServiceCommands, TCAdminSubdomain', 100, 1, 0, null);
+
+INSERT INTO tc_module_commands (command_id, module_id, is_custom, description, sender_class, command_name,
+                                command_class, execute_order, enabled, can_disable, master_only)
+VALUES (5, 'ceb0b7e0-59f6-4290-991d-b766b30f1ff1', 1, 'Subdomain - Before GameSwitch',
+        'TCAdmin.GameHosting.SDK.Objects.Service', 'BeforeGameSwitchScript',
+        'TCAdminSubdomain.Events.Commands.ServiceCommands, TCAdminSubdomain', 100, 1, 0, null);
+
+INSERT INTO tc_module_commands (command_id, module_id, is_custom, description, sender_class, command_name,
+                                command_class, execute_order, enabled, can_disable, master_only)
+VALUES (6, 'ceb0b7e0-59f6-4290-991d-b766b30f1ff1', 1, 'Subdomain - After GameSwitch',
+        'TCAdmin.GameHosting.SDK.Objects.Service', 'AfterGameSwitchScript',
+        'TCAdminSubdomain.Events.Commands.ServiceCommands, TCAdminSubdomain', 100, 1, 0, null);
+
+UPDATE tc_module_commands SET command_name = 'AfterMoveScript' WHERE command_id = '1' AND module_id = 'ceb0b7e0-59f6-4290-991d-b766b30f1ff1' AND is_custom = '1';
+
+UPDATE tc_module_commands SET command_name = 'AfterDeleteScript' WHERE command_id = '2' AND module_id = 'ceb0b7e0-59f6-4290-991d-b766b30f1ff1' AND is_custom = '1';
